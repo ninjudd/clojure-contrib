@@ -198,4 +198,7 @@
   the (optionally parameterized) SQL query followed by values for any
   parameters."
   [results sql-params & body]
-  `(with-query-results* ~sql-params (fn [~results] ~@body)))
+  (let [[opts body] (if (map? (first body))
+                      [(first body) (rest body)]
+                      [nil  body])]
+    `(with-query-results* ~sql-params ~opts (fn [~results] ~@body))))

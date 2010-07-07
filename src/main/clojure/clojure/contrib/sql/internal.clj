@@ -16,7 +16,8 @@
    (clojure.contrib
     [except :only (throwf throw-arg)]
     [properties :only (as-properties)]
-    [seq :only (indexed)]))
+    [seq :only (indexed)]
+    [bean :only (update-bean)]))
   (:import
    (clojure.lang RT)
    (java.sql BatchUpdateException DriverManager SQLException Statement)
@@ -179,7 +180,7 @@
   "Executes a query, then evaluates func passing in a seq of the results as
   an argument. The first argument is a vector containing the (optionally
   parameterized) sql query string followed by values for any parameters."
-  [[sql & params :as sql-params] func]
+  [[sql & params :as sql-params] opts func]
   (when-not (vector? sql-params)
     (throw-arg "\"%s\" expected %s %s, found %s %s"
                "sql-params"
@@ -188,6 +189,7 @@
                (.getName (class sql-params))
                (pr-str sql-params)))
   (with-open [stmt (.prepareStatement (connection*) sql)]
+    (update-bean stmt opts)
     (doseq [[index value] (map vector (iterate inc 1) params)]
       (.setObject stmt index value))
     (with-open [rset (.executeQuery stmt)]
