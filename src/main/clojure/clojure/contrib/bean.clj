@@ -50,4 +50,5 @@
         (when-not (nil? val)
           (let [type (first (.getParameterTypes setter))]
             (.invoke setter instance (into-array [(coerce bean-class type val)]))))
-        (throw (Exception. (str "property not found for " key)))))))
+        (throw (Exception. (str "property not found for " key)))))
+    instance))
