@@ -1,31 +1,32 @@
-;;  Copyright (c) Justin Balthrop. All rights reserved.  The use and
-;;  distribution terms for this software are covered by the Eclipse Public
-;;  License 1.0 (http://opensource.org/licenses/eclipse-1.0.php) which can
-;;  be found in the file epl-v10.html at the root of this distribution.  By
-;;  using this software in any fashion, you are agreeing to be bound by the
-;;  terms of this license.  You must not remove this notice, or any other
-;;  from this software.
-;;
-;;  Tests for clojure.contrib.bean
-;;
-;;  code@justinbalthrop.com
-;;  Created July 7, 2010
-
 (ns clojure.contrib.test-bean
+  (:gen-class :name clojure.contrib.TestBean
+              :init init
+              :state state
+              :methods [[getFoo    [] String ] [setFoo    [String]  void]
+                        [getBarBaz [] Integer] [setBarBaz [Integer] void]])
   (:use clojure.test clojure.contrib.bean))
 
+(defn -init []
+  [[] (atom {})])
+
+(defn -getFoo [this]
+  (:foo @(.state this)))
+
+(defn -setFoo [this #^String val]
+  (swap! (.state this) assoc :foo val))
+
+(defn -getBarBaz [this]
+  (:bar-baz @(.state this)))
+
+(defn -setBarBaz [this #^Integer val]
+  (swap! (.state this) assoc :bar-baz val))
+
 (deftest test-update-bean
-  (let [b (java.awt.TextField.)]
-    (is (= "" (.getText b)))
-    (is (= java.awt.TextField (class (update-bean b {:text 43}))))
-    (is (= "43" (.getText b)))
+  (let [b (clojure.contrib.TestBean.)]
+    (is (= clojure.contrib.TestBean (class (update-bean b {:foo 43}))))
+    (is (= "43" (.getFoo b)))
 
-    (is (= 0 (.getSelectionStart b)))
-    (is (= 0 (.getSelectionEnd b)))
-    (is (= java.awt.TextField
-           (class (update-bean b {:text "foo" :name "bar" :selection-start 1 :selection-end 2}))))
-    (is (= "foo" (.getText b)))
-    (is (= "bar" (.getName b)))
-    (is (= 1 (.getSelectionStart b)))
-    (is (= 2 (.getSelectionEnd b)))))
-
+    (is (= clojure.contrib.TestBean
+           (class (update-bean b {:foo "foo" :bar-baz 18}))))
+    (is (= "foo" (.getFoo b)))
+    (is (= 18 (.getBarBaz b)))))
