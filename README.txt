@@ -1,20 +1,20 @@
 = Clojure-contrib =
 
-The user contributions library, clojure.contrib, is a collection of
-namespaces each of which implements features that we believe may be
-useful to a large part of the Clojure community.
+The user contributions library, clojure-contrib, is a collection of
+namespaces implementing features that may be useful to a large part of
+the Clojure community.
 
 Clojure-contrib is open source under the Eclipse Public License and is
 copyrighted by Rich Hickey and the various contributors.
 
 Download releases from
-http://code.google.com/p/clojure-contrib/downloads
+http://clojure.org/downloads
 
 The official source repository for clojure-contrib is
-http://github.com/richhickey/clojure-contrib
+http://github.com/clojure/clojure-contrib
 
 Documentation and APIs are available at
-http://richhickey.github.com/clojure-contrib/
+http://clojure.github.com/clojure-contrib/
 
 Issues are maintained in the Assembla space at
 http://www.assembla.com/spaces/clojure-contrib
@@ -24,25 +24,31 @@ http://groups.google.com/group/clojure
 and developer discussions are in the Clojure Dev Google group at
 http://groups.google.com/group/clojure-dev
 
-Compiled JARs of development snapshots are available at
-http://build.clojure.org/
+Compiled JARs of released versions are available in the Maven
+repository http://build.clojure.org/releases and SNAPSHOT versions are
+available at http://build.clojure.org/snapshots
 
 
 
 = Building Clojure-contrib =
 
 If you downloaded a release distribution or pre-compiled JAR, you
-don't need to do anything.
+do NOT need to build anything.
 
 If you downloaded the sources from Github, you will need Apache Maven
 (2.0 or higher) to run the build.  See http://maven.apache.org/
 
-Run the following command in this directory:
+AFTER version 1.2.0, clojure-contrib is divided into many small modules.
 
-    mvn package
+To build all the modules, run the following command in this directory:
 
-This will produce the file target/clojure-contrib-${VERSION}.jar that
-you can add to your Java classpath.
+    mvn install
+
+This will compile and test all modules and store them in your local
+Maven repository cache (usually $HOME/.m2/repository).
+
+There is also an "uberjar" containing all compiled modules at
+./modules/complete/target/complete-$VERSION-bin.jar
 
 Additional build commands are available:
 
@@ -63,17 +69,27 @@ to the mvn command line.
 
 
 
-== Compiling with Local clojure.jar ==
+= Building Against Specific Released Clojure Versions =
 
-If you want to compile/build with a customized clojure.jar file, use
-the following command:
+You can specify -Dclojure.version=VERSION on the command line to select a different Clojure version.
 
-    mvn package -Dclojure.jar=/path/to/clojure.jar
 
-The /path/to/clojure.jar MUST be an absolute path.  
 
-Maven will still download other dependencices,
-such as clojure-maven-plugin.
+= Building Against a Custom Clojure JAR =
+
+To build against a customized Clojure JAR, build *Clojure* like this:
+
+1. Modify the Clojure sources with your custom changes
+
+2. Set a custom version number in src/clj/clojure/version.properties
+
+3. Download maven-ant-tasks.jar from http://maven.apache.org/ant-tasks/download.html
+
+4. In the Clojure source directory, run:
+
+    ant -lib /path/to/maven-ant-tasks.jar ci-build
+
+THEN, build clojure-contrib with -Dclojure.version=YOUR_CUSTOM_VERSION
 
 
 
@@ -85,11 +101,12 @@ If you are using Clojure 1.0, use clojure-contrib 1.0.*
 
 If you are using Clojure 1.1, use clojure-contrib 1.1.*
 
+If you are using Clojure 1.2, use clojure-contrib 1.2.*
+
+If you are using Clojure 1.3, use clojure-contrib 1.3.*
+
 If you are using Clojure from the "master" branch on Github, use
 clojure-contrib from the "master" branch on Github.
-
-If you are using Clojure from the "new" branch on Github, use
-clojure-contrib from the "new" branch on Github.
 
 
 
